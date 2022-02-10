@@ -13,11 +13,12 @@ body {
   flex-direction: row;
   justify-content: center;
   margin: 0 auto;
+  margin-bottom: 100px;
 }
 
 .selected {
-  transition: 2s;
-  background-color: red;
+  transition: 0.5s;
+  background-color: green;
 }
 
 img {
@@ -33,7 +34,17 @@ img {
   border: 1px solid black;
 }
 
+#opponentContainer {
+  margin-top: 100px;
+}
+
 .hidden {
-  margin-top: 200px;
-  /* opacity: 0; */
+  transition: 1.5s;
+  opacity: 0;
+}
+
+#center-text {
+  width: 800px;
+  margin: 0 auto;
+  height: 50px;
 }

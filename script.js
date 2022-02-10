@@ -3,10 +3,10 @@ function pick(symbol){
         const oponentPicked = getRandomSymbol();
         const playerPicked = options.find(obj => obj.symbolName === symbol);
         console.log(oponentPicked)
-
+        paintSymbol(symbol,'player')
+        doOpponentActions(oponentPicked)
         decideWinner(oponentPicked, playerPicked);
-        paintSymbol(symbol)
-        showOpponentContainer()
+        
     }
 }
 
@@ -35,30 +35,33 @@ function getRandomSymbol(){
 }
 
 function decideWinner(oponentPicked, playerPicked){
-    if(oponentPicked === playerPicked.symbolName){
-        playersTied();
-    }
-    if(oponentPicked === playerPicked.loses){
-        playerLost();
-    }
-    if(oponentPicked === playerPicked.wins){
-        playerWins();
-    }
+    setTimeout(() => {
+        if(oponentPicked === playerPicked.symbolName){
+            playersTied();
+        }
+        if(oponentPicked === playerPicked.loses){
+            playerLost();
+        }
+        if(oponentPicked === playerPicked.wins){
+            playerWins();
+        }
+    },5250)
+    
 }
 
 function playersTied(){
-    console.log('tie');
+    document.getElementById('center-text').innerText=`It's a draw! ⚔️`
 }
 function playerLost(){
-    console.log('player lost');
+    document.getElementById('center-text').innerText=`You have Lost 😔`
 }
 function playerWins(){
-    console.log('player wins');
+    document.getElementById('center-text').innerText=`You have won 😎`
 }
 
 
-function paintSymbol(symbol){
-    const div = document.querySelector(`[alt=${symbol}]`)
+function paintSymbol(symbol,party){
+    const div = document.querySelector(`#${party}Container [alt=${symbol}]`)
     div.parentNode.classList.add('selected')
 }
 
@@ -67,5 +70,53 @@ function isSymbolSelected(){
 }
 
 function showOpponentContainer(){
-    console.log('i am here') 
+    setTimeout(() => {
+        document.getElementById('opponentContainer').style.opacity = 1;
+        document.getElementById('center-text').style.opacity = 1;
+    },750)
+
+}
+
+
+function doOpponentActions(opponentSymbol){
+    showOpponentContainer()
+    toggleOpponentPicks()
+    pickFinalOpponentSymbol(opponentSymbol)
+}
+
+function toggleOpponentPicks(){
+    const base = 500
+    const increment = 250
+    const fullRotation = 1500
+    for (let times = 0; times < 3; times++) {
+        setTimeout(() => {
+            paintSymbol('rock','opponent')
+        },base+increment*0+fullRotation*times)
+        setTimeout(() => {
+            removeOpponentSelected()
+        },base+increment*1+fullRotation*times)
+        setTimeout(() => {
+            paintSymbol('paper','opponent')
+        },base+increment*2+fullRotation*times)
+        setTimeout(() => {
+            removeOpponentSelected()
+        },base+increment*3+fullRotation*times)
+        setTimeout(() => {
+            paintSymbol('scissors','opponent')
+        },base+increment*4+fullRotation*times)
+        setTimeout(() => {
+            removeOpponentSelected()
+        },base+increment*5+fullRotation*times)   
+    }
+    
+}
+
+function removeOpponentSelected(){
+    document.querySelector('#opponentContainer .selected').classList.remove('selected')
+}
+
+function pickFinalOpponentSymbol(opponentSymbol){
+    setTimeout(() => {
+        paintSymbol(opponentSymbol,'opponent')
+    },5000)
 }
