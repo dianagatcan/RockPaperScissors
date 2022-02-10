@@ -67,5 +67,5 @@ function isSymbolSelected(){
 }
 
 function showOpponentContainer(){
-    
+    console.log('i am here') 
 }

@@ -1,0 +1,39 @@
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.container {
+  width: 800px;
+  height: 200px;
+  background-color: bisque;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.selected {
+  transition: 2s;
+  background-color: red;
+}
+
+img {
+  width: 128px;
+  height: 128px;
+}
+
+.symbol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: 1px solid black;
+}
+
+.hidden {
+  margin-top: 200px;
+  /* opacity: 0; */
+}
