@@ -8,13 +8,14 @@
     <title>RockPaperScissors</title>
 </head>
 <body>
+    <h1 class="hidden">Player     <span id="player-score">0</span>:<span id="opponent-score">0</span> Computer</h1>
     <h1>Pick a symbol</h1>
     <div id='playerContainer' class="container">
         <div class="symbol" ><img src="assets/rock.png" alt="rock" onClick="pick('rock')" ></div>
         <div class="symbol" ><img src="assets/paper.png" alt="paper" onClick="pick('paper')" ></div>
         <div class="symbol" ><img src="assets/scissors.png" alt="scissors" onClick="pick('scissors')" ></div>
     </div>
-    <h1 id="center-text" class="hidden">Computer is picking...</h1>
+    <h1 id="center-text" class="hidden"></h1>
     <div id='opponentContainer' class="container hidden">
         <div class="symbol" ><img src="assets/rock.png" alt="rock" ></div>
         <div class="symbol" ><img src="assets/paper.png" alt="paper" ></div>

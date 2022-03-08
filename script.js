@@ -1,12 +1,16 @@
-function pick(symbol){
+var playerScore = 0;
+var computerScore = 0;
+var defaultTime = 750;
+
+async function pick(symbol){
     if(!isSymbolSelected()){
         const oponentPicked = getRandomSymbol();
         const playerPicked = options.find(obj => obj.symbolName === symbol);
-        console.log(oponentPicked)
         paintSymbol(symbol,'player')
-        doOpponentActions(oponentPicked)
-        decideWinner(oponentPicked, playerPicked);
-        
+        showScore()
+        await doOpponentActions(oponentPicked)
+        await decideWinner(oponentPicked, playerPicked);
+        resetState()
     }
 }
 
@@ -30,23 +34,38 @@ const scissorsObj = {
 
 const options = [rockObj, paperObj, scissorsObj];
 
+function setScore(){
+    document.getElementById('player-score').innerText=playerScore
+    document.getElementById('opponent-score').innerText=computerScore
+}
+function showScore(){
+    document.getElementById('player-score').parentElement.style.transition='1s'
+    document.getElementById('player-score').parentElement.style.opacity=1;
+    document.getElementById('opponent-score').parentElement.style.transition='1s'
+    document.getElementById('opponent-score').parentElement.style.opacity=1;
+}
+
 function getRandomSymbol(){
     return options[Math.floor(Math.random() * options.length)].symbolName;
 }
 
-function decideWinner(oponentPicked, playerPicked){
-    setTimeout(() => {
-        if(oponentPicked === playerPicked.symbolName){
-            playersTied();
-        }
-        if(oponentPicked === playerPicked.loses){
-            playerLost();
-        }
-        if(oponentPicked === playerPicked.wins){
-            playerWins();
-        }
-    },5250)
-    
+async function decideWinner(oponentPicked, playerPicked){
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            if(oponentPicked === playerPicked.symbolName){
+                playersTied();
+            }
+            if(oponentPicked === playerPicked.loses){
+                playerLost();
+            }
+            if(oponentPicked === playerPicked.wins){
+                playerWins();
+            }
+            setScore()
+            resolve()
+        },defaultTime)
+    })
+        
 }
 
 function playersTied(){
@@ -54,9 +73,11 @@ function playersTied(){
 }
 function playerLost(){
     document.getElementById('center-text').innerText=`You have Lost 😔`
+    computerScore++
 }
 function playerWins(){
     document.getElementById('center-text').innerText=`You have won 😎`
+    playerScore++
 }
 
 
@@ -69,54 +90,72 @@ function isSymbolSelected(){
     return document.querySelector('.selected')?true:false
 }
 
-function showOpponentContainer(){
-    setTimeout(() => {
-        document.getElementById('opponentContainer').style.opacity = 1;
-        document.getElementById('center-text').style.opacity = 1;
-    },750)
 
-}
-
-
-function doOpponentActions(opponentSymbol){
-    showOpponentContainer()
-    toggleOpponentPicks()
-    pickFinalOpponentSymbol(opponentSymbol)
+async function doOpponentActions(opponentSymbol){
+    return new Promise(async (resolve) => {
+        await waitThenShowContainer()
+        await toggleOpponentPicks()
+        await waitThenPaint(defaultTime,opponentSymbol,'opponent')
+        resolve()
+    })
 }
 
 function toggleOpponentPicks(){
-    const base = 500
-    const increment = 250
-    const fullRotation = 1500
-    for (let times = 0; times < 3; times++) {
+    return new Promise(async (resolve) => {
+        await waitThenPaint(defaultTime,'rock','opponent')
+        await waitThenRemove(defaultTime,'opponent')
+        await waitThenPaint(defaultTime,'paper','opponent')
+        await waitThenRemove(defaultTime,'opponent')
+        await waitThenPaint(defaultTime,'scissors','opponent')
+        await waitThenRemove(defaultTime,'opponent')
+        resolve();
+    }) 
+}
+
+function waitThenShowContainer(){
+    return new Promise((resolve) => {
         setTimeout(() => {
-            paintSymbol('rock','opponent')
-        },base+increment*0+fullRotation*times)
+            document.getElementById('opponentContainer').style.opacity = 1;
+            document.getElementById('center-text').style.opacity = 1;
+            showComputerIsThinking()
+            resolve()
+        },defaultTime)
+    })
+}
+
+
+function waitThenPaint(time,symbol,party){
+    return new Promise((resolve) => {
         setTimeout(() => {
-            removeOpponentSelected()
-        },base+increment*1+fullRotation*times)
-        setTimeout(() => {
-            paintSymbol('paper','opponent')
-        },base+increment*2+fullRotation*times)
-        setTimeout(() => {
-            removeOpponentSelected()
-        },base+increment*3+fullRotation*times)
-        setTimeout(() => {
-            paintSymbol('scissors','opponent')
-        },base+increment*4+fullRotation*times)
-        setTimeout(() => {
-            removeOpponentSelected()
-        },base+increment*5+fullRotation*times)   
-    }
+            paintSymbol(symbol,party)
+            resolve()
+        },time)
+    })
+}
+
+
+function removeSelected(party){
+    document.querySelector(`#${party}Container .selected`).classList.remove('selected')
+}
+
+function resetState(){
+    setTimeout(() => {
+        removeSelected('opponent')
+        removeSelected('player')
+        document.getElementById('center-text').innerHTML=''
+    },defaultTime*3)
     
 }
 
-function removeOpponentSelected(){
-    document.querySelector('#opponentContainer .selected').classList.remove('selected')
+function showComputerIsThinking(){
+    document.getElementById('center-text').innerText="Computer is picking..."
 }
 
-function pickFinalOpponentSymbol(opponentSymbol){
-    setTimeout(() => {
-        paintSymbol(opponentSymbol,'opponent')
-    },5000)
+function waitThenRemove(time,party){
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            removeSelected(party)
+            resolve()
+        },time)
+    })
 }
