@@ -143,6 +143,8 @@ function resetState(){
         removeSelected('opponent')
         removeSelected('player')
         document.getElementById('center-text').innerHTML=''
+        document.getElementById('opponentContainer').style.opacity = 0;
+
     },defaultTime*3)
     
 }
